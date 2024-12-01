@@ -12,6 +12,10 @@ app.get('/', (req, res) => {
   res.send('ID Card App');
 });
 
+app.get("/op", (req, res) => {
+  res.send("ID Card App");
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
