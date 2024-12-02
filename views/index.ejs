@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Excel File</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/index.css" rel="stylesheet" />
+    <script src="/js/bootstrap.min.js" defer></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="form-container">
+        <h1>Upload Excel File</h1>
+        <form
+          id="uploadForm"
+          action="/upload"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group mb-4">
+            <label for="excelFile">Choose Excel File</label>
+            <input
+              type="file"
+              name="excelFile"
+              id="excelFile"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-custom">Upload</button>
+        </form>
+        <div class="text-center mt-4">
+          <a href="/data" class="btn btn-outline-primary">View Uploaded Data</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const uploadForm = document.getElementById("uploadForm");
+      const toastContainer = document.getElementById("toastContainer");
+
+      uploadForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(uploadForm);
+
+        try {
+          const response = await fetch("/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await response.json();
+
+          // Show success or error message as toast
+          showToast(
+            data.message || data.error,
+            data.error ? "error" : "success"
+          );
+
+          // If records are skipped, show a specific toast
+          if (data.skippedRecords > 0) {
+            showToast(`${data.skippedRecords} records were skipped.`, "error");
+          }
+        } catch (error) {
+          showToast("An error occurred (make sure to upload .xlsx).", "error");
+        }
+      });
+
+      function showToast(message, type) {
+        const toast = document.createElement("div");
+        toast.classList.add("toast", type);
+        toast.textContent = message;
+
+        toastContainer.appendChild(toast);
+
+        // Show the toast for 3 seconds and then remove it
+        toast.style.display = "block";
+        setTimeout(() => {
+          toast.style.display = "none";
+          toastContainer.removeChild(toast);
+        }, 3000);
+      }
+    </script>
+  </body>
+</html>
