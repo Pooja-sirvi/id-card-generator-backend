@@ -47,3 +47,27 @@ document.querySelectorAll(".delete-btn").forEach((button) => {
     }
   });
 });
+
+window.onload = function () {
+  var searchInput = document.getElementById("searchInput");
+  searchInput.focus();
+  // Set the cursor to the end of the text inside the input field
+  searchInput.setSelectionRange(
+    searchInput.value.length,
+    searchInput.value.length
+  );
+};
+
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.getElementById("searchInput");
+
+  // Event listener for search input
+  searchInput.addEventListener("input", function () {
+    const searchTerm = searchInput.value;
+    const currentPage =
+      new URLSearchParams(window.location.search).get("page") || 1;
+
+    // Redirect to the same page with the updated search query
+    window.location.href = `/data?page=${currentPage}&search=${searchTerm}`;
+  });
+});
