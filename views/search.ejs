@@ -12,11 +12,25 @@
     />
   </head>
   <body>
-    <a href="/" class="mb-3 me-4">Back</a>
+    <a href="/data" class="mb-3 me-4">Back</a>
     <div class="d-flex flex-row align-items-center justify-content-center">
-      <h1 class="mb-3 ms-4">Student Record</h1>
+      <h1 class="mb-3 ms-4">Search Student Record</h1>
     </div>
-    <a href="/search">Search Record</a>
+
+    <!-- Branch Filter Dropdown -->
+    <div class="container mt-3">
+      <div class="d-flex justify-content-center">
+        <input
+          type="text"
+          id="searchInput"
+          class="form-control w-50"
+          placeholder="Search for a record..."
+        />
+        <button class="btn btn-primary" type="button" id="searchButton">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
 
     <!-- Table Container -->
     <div class="table-container mt-4">
@@ -36,9 +50,9 @@
             <th>Edit</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="dataTable">
           <% data.forEach(function(item) { %>
-          <tr>
+          <tr class="data-row" data-branch="<%= item.branch %>">
             <td><%= item.slNo %></td>
             <td><%= item.firstName %></td>
             <td><%= item.secondName %></td>
@@ -62,55 +76,13 @@
                 onclick="window.location.href='/data/details/<%= item._id %>'"
               >
                 Details
-              </button>
+              </button> 
             </td>
           </tr>
           <% }); %>
         </tbody>
       </table>
     </div>
-    <!-- Drop Database Button -->
-    <div class="mt-3 text-end">
-      <button id="dropDatabaseBtn" class="btn btn-danger w-auto">
-        Drop Database
-      </button>
-      <div id="responseMessage" class="mt-2"></div>
-    </div>
-
-    <!-- Pagination Controls -->
-    <div class="pagination">
-      <% if (page > 1) { %>
-      <a
-        href="/data?page=<%= page - 1 %>&search=<%= search %>"
-        class="page-item"
-      >
-        <span class="page-link">Previous</span>
-      </a>
-      <% } else { %>
-      <span class="page-item disabled">
-        <span class="page-link">Previous</span>
-      </span>
-      <% } %> <% for (let i = 1; i <= totalPages; i++) { %>
-      <a
-        href="/data?page=<%= i %>&search=<%= search %>"
-        class="page-item <%= i === page ? 'active' : '' %>"
-      >
-        <span class="page-link"><%= i %></span>
-      </a>
-      <% } %> <% if (page < totalPages) { %>
-      <a
-        href="/data?page=<%= page + 1 %>&search=<%= search %>"
-        class="page-item"
-      >
-        <span class="page-link">Next</span>
-      </a>
-      <% } else { %>
-      <span class="page-item disabled">
-        <span class="page-link">Next</span>
-      </span>
-      <% } %>
-    </div>
-
-    <script src="/js/data.js"></script>
+    <script src="/js/search.js"></script>
   </body>
 </html>

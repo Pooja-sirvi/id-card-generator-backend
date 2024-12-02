@@ -39,6 +39,7 @@ body {
 
 .btn-custom:hover {
   background-color: #0056b3;
+  color: #fff;
 }
 
 .form-group label {

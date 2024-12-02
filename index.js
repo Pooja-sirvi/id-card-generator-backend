@@ -4,6 +4,8 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const dataRoutes = require("./routes/dataRoutes");
 const dropDbRoutes = require("./routes/dropDbRoutes");
 const deleteRoutes = require("./routes/deleteEachRoutes");
+const searchRoutes = require("./routes/searchRoutes");
+const eachRecord = require("./routes/eachRecordRoutes");
 
 const app = express();
 
@@ -15,10 +17,12 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 
 // Use the routes
-app.use(uploadRoutes); // Use routes for uploading data
-app.use(dataRoutes); // Use routes for fetching data
-app.use(dropDbRoutes); // Use routes for dropping db
+app.use(uploadRoutes);
+app.use(dataRoutes);
+app.use(dropDbRoutes);
 app.use(deleteRoutes);
+app.use(searchRoutes);
+app.use(eachRecord);
 
 app.get("/", (req, res) => {
   res.render("index");
