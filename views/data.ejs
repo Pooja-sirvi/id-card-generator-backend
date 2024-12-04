@@ -1,116 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Uploaded Data</title>
-    <link href="/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="/css/data.css" rel="stylesheet" />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <a href="/" class="mb-3 me-4">Back</a>
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <h1 class="mb-3 ms-4">Student Record</h1>
-    </div>
-    <a href="/search">Search Record</a>
+    <title>Student Records</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="/">Student Records</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Search Record</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Table Container -->
-    <div class="table-container mt-4">
-      <table class="table table-striped table-bordered table-hover">
-        <thead>
-          <tr>
-            <th>Sl. No.</th>
-            <th>First Name</th>
-            <th>Second Name</th>
-            <th>USN</th>
-            <th>Branch</th>
-            <th>Blood Group</th>
-            <th>Father's Name</th>
-            <th>Residential Address</th>
-            <th>(Unformatted) Phone Number</th>
-            <th>Phone Number</th>
-            <th>Edit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% data.forEach(function(item) { %>
-          <tr>
-            <td><%= item.slNo %></td>
-            <td><%= item.firstName %></td>
-            <td><%= item.secondName %></td>
-            <td><%= item.usn %></td>
-            <td><%= item.branch %></td>
-            <td><%= item.bloodGroup %></td>
-            <td><%= item.fathersName %></td>
-            <td><%= item.residentialAddress %></td>
-            <td><%= item.unformattedPhoneNumber %></td>
-            <td><%= item.phoneNumber %></td>
-            <td>
-              <button
-                class="btn btn-danger btn-sm delete-btn"
-                data-id="<%= item._id %>"
-              >
-                Delete
-              </button>
-              /
-              <button
-                class="btn btn-success btn-sm details-btn"
-                onclick="window.location.href='/data/details/<%= item._id %>'"
-              >
-                Details
-              </button>
-            </td>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    </div>
-    <!-- Drop Database Button -->
-    <div class="mt-3 text-end">
-      <button id="dropDatabaseBtn" class="btn btn-danger w-auto">
-        Drop Database
-      </button>
-      <div id="responseMessage" class="mt-2"></div>
-    </div>
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Student Records</h1>
 
-    <!-- Pagination Controls -->
-    <div class="pagination">
-      <% if (page > 1) { %>
-      <a
-        href="/data?page=<%= page - 1 %>&search=<%= search %>"
-        class="page-item"
-      >
-        <span class="page-link">Previous</span>
-      </a>
-      <% } else { %>
-      <span class="page-item disabled">
-        <span class="page-link">Previous</span>
-      </span>
-      <% } %> <% for (let i = 1; i <= totalPages; i++) { %>
-      <a
-        href="/data?page=<%= i %>&search=<%= search %>"
-        class="page-item <%= i === page ? 'active' : '' %>"
-      >
-        <span class="page-link"><%= i %></span>
-      </a>
-      <% } %> <% if (page < totalPages) { %>
-      <a
-        href="/data?page=<%= page + 1 %>&search=<%= search %>"
-        class="page-item"
-      >
-        <span class="page-link">Next</span>
-      </a>
-      <% } else { %>
-      <span class="page-item disabled">
-        <span class="page-link">Next</span>
-      </span>
-      <% } %>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Sl. No.</th>
+                        <th>First Name</th>
+                        <th>Second Name</th>
+                        <th>USN</th>
+                        <th>Branch</th>
+                        <th>Blood Group</th>
+                        <th>Father's Name</th>
+                        <th>Residential Address</th>
+                        <th>(Unformatted) Phone Number</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% data.forEach(function(item) { %>
+                    <tr>
+                        <td><%= item.slNo %></td>
+                        <td><%= item.firstName %></td>
+                        <td><%= item.secondName %></td>
+                        <td><%= item.usn %></td>
+                        <td><%= item.branch %></td>
+                        <td><%= item.bloodGroup %></td>
+                        <td><%= item.fathersName %></td>
+                        <td><%= item.residentialAddress %></td>
+                        <td><%= item.unformattedPhoneNumber %></td>
+                        <td><%= item.phoneNumber %></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-danger btn-sm delete-btn" data-id="<%= item._id %>">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                                <button class="btn btn-success btn-sm details-btn" onclick="window.location.href='/data/details/<%= item._id %>'">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="/data?page=<%= page - 1 %>&search=<%= search %>" <%= page <= 1 ? 'tabindex="-1" aria-disabled="true"' : '' %>>Previous</a>
+                </li>
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= i === page ? 'active' : '' %>">
+                    <a class="page-link" href="/data?page=<%= i %>&search=<%= search %>"><%= i %></a>
+                </li>
+                <% } %>
+                <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="/data?page=<%= page + 1 %>&search=<%= search %>" <%= page >= totalPages ? 'tabindex="-1" aria-disabled="true"' : '' %>>Next</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Drop Database Button -->
+        <div class="text-center mt-4">
+            <button id="dropDatabaseBtn" class="btn btn-danger">
+                <i class="bi bi-exclamation-triangle"></i> Drop Database
+            </button>
+            <div id="responseMessage" class="mt-2"></div>
+        </div>
     </div>
 
     <script src="/js/data.js"></script>
-  </body>
+</body>
 </html>
+
