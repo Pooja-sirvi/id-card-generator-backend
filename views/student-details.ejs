@@ -222,41 +222,96 @@
       </div>
     </div>
 
-   <script>
-    // Sanitize function to escape special characters
-    function sanitizeString(str) {
+    <script>
+      // Sanitize function to escape special characters
+      function sanitizeString(str) {
         if (str) {
-            return str.replace(/[\0\x08\x09\x1a\n\r\x0b\x0c]/g, function (char) {
-                return '&#' + char.charCodeAt(0) + ';';
-            });
+          return str.replace(/[\0\x08\x09\x1a\n\r\x0b\x0c]/g, ""); // Remove control characters
         }
-        return '';
-    }
+        return "";
+      }
 
-    // Generate QR code
-    function generateQRCode() {
-        const qrCodeCanvas = document.getElementById('canvas');
-        const qrData = "Student ID: <%= student.usn %>"; // Include the student unique ID or any other identifier
-        QRCode.toCanvas(qrCodeCanvas, qrData, function (error) {
-            if (error) console.error(error);
+      // Prepare the student data as a sanitized string for the QR code
+      const studentData = {
+        slNo: "<%= student.slNo || '' %>",
+        firstName: "<%= student.firstName || '' %>",
+        secondName: "<%= student.secondName || '' %>",
+        usn: "<%= student.usn || '' %>",
+        branch: "<%= student.branch || '' %>",
+        bloodGroup: "<%= student.bloodGroup || '' %>",
+        fathersName: "<%= student.fathersName || '' %>",
+        residentialAddress: "<%= student.residentialAddress || '' %>",
+        phoneNumber: "<%= student.phoneNumber || '' %>",
+      };
+
+      // Sanitize all student data to remove any unwanted characters
+      const sanitizedData = {
+        slNo: sanitizeString(studentData.slNo),
+        firstName: sanitizeString(studentData.firstName),
+        secondName: sanitizeString(studentData.secondName),
+        usn: sanitizeString(studentData.usn),
+        branch: sanitizeString(studentData.branch),
+        bloodGroup: sanitizeString(studentData.bloodGroup),
+        fathersName: sanitizeString(studentData.fathersName),
+        residentialAddress: sanitizeString(studentData.residentialAddress),
+        phoneNumber: sanitizeString(studentData.phoneNumber),
+      };
+
+      // Convert student data to JSON string
+      const studentDataJSON = JSON.stringify(sanitizedData);
+
+      // Generate the QR code inside the canvas element
+      QRCode.toCanvas(
+        document.getElementById("canvas"),
+        studentDataJSON,
+        {
+          width: 70, // Set the size of the QR code here (in pixels)
+        },
+        function (error) {
+          if (error) {
+            console.error("QR code generation error:", error);
+          } else {
+            console.log("QR code generated!");
+          }
+        }
+      );
+
+      // Function to download the ID card as a PDF with background images
+      function downloadPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({
+          unit: "pt", // Set unit to points
+          format: [161.3, 252.5], // Set PDF dimensions based on actual size in points
         });
-    }
 
-    // Download the ID card as PDF
-    function downloadPDF() {
-        // Wait for the QR code to be generated
-        generateQRCode();
-        
-        // Wait for the canvas to load and generate PDF
-        setTimeout(function () {
-            html2canvas(document.querySelector('.id-card-container')).then(function (canvas) {
-                const pdf = new jsPDF();
-                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 10, 180, 280);
-                pdf.save('Student-ID-Card.pdf');
-            });
-        }, 500); // Delay to ensure QR code is generated
-    }
-</script>
+        // Front Page: Add background image
+        const frontImageUrl =
+          "https://res.cloudinary.com/vanshstorage/image/upload/v1733251106/front_qu88ri.jpg"; // Front background image URL
+        pdf.addImage(frontImageUrl, "JPEG", 0, 0, 161.3, 252.5); // Add the front page background image
 
+        // Capture front page content
+        const frontSide = document.getElementById("front-side");
+        html2canvas(frontSide, { scale: 4, useCORS: true }).then((canvas) => {
+          const imgData = canvas.toDataURL("image/png");
+          pdf.addImage(imgData, "PNG", 0, 0, 161.3, 252.5); // Add the front page content
+          pdf.addPage(); // Create a new page for the back side
+
+          // Back Page: Add background image
+          const backImageUrl =
+            "https://res.cloudinary.com/vanshstorage/image/upload/v1733251106/back_gid61r.jpg"; // Back background image URL
+          pdf.addImage(backImageUrl, "JPEG", 0, 0, 161.3, 252.5); // Add the back page background image
+
+          // Capture back page content
+          const backSide = document.getElementById("back-side");
+          html2canvas(backSide, { scale: 4, useCORS: true }).then((canvas) => {
+            const imgDataBack = canvas.toDataURL("image/png");
+            pdf.addImage(imgDataBack, "PNG", 0, 0, 161.3, 252.5); // Add the back page content
+            const studentUSN = "<%= student.usn %>";
+
+            pdf.save(`${studentUSN}.pdf`);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
