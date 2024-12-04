@@ -3,80 +3,153 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Student Details</title>
+    <title>Student ID Card</title>
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/css/data.css" rel="stylesheet" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
       rel="stylesheet"
     />
-    <!-- QR Code Library -->
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-    <!-- jsPDF and html2canvas Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+    <style>
+      /* Convert mm to pixels (57mm x 89mm) */
+      .id-card {
+        width: 215.2px; /* 57mm in pixels */
+        height: 336px; /* 89mm in pixels */
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        background-size: cover;
+        background-position: center;
+      }
+
+      /* Front page background image */
+      #front-side {
+        background-image: url("https://res.cloudinary.com/vanshstorage/image/upload/v1733251106/front_qu88ri.jpg"); /* Your predefined front background image */
+      }
+
+      /* Back page background image */
+      #back-side {
+        background-image: url("https://res.cloudinary.com/vanshstorage/image/upload/v1733251106/back_gid61r.jpg"); /* Your predefined back background image */
+      }
+
+      .id-card .left {
+        width: 50%;
+        padding-right: 10px;
+      }
+
+      .id-card .right {
+        width: 50%;
+        text-align: center;
+      }
+
+      .id-card img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+      }
+
+      .id-card .details {
+        font-size: 12px;
+        margin-top: 10px;
+      }
+
+      .id-card .qr-code {
+        margin-top: 10px;
+      }
+
+      /* Container to hold both front and back ID card */
+      .id-card-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
   </head>
   <body>
-    <a href="/data" class="mb-3 me-4">Back to Student List</a>
-    <div class="d-flex flex-row align-items-center justify-content-center">
-      <h1 class="mb-3 ms-4 mb-5">Student Details</h1>
-    </div>
+    <div class="container text-center mt-5">
+      <h1>Student ID Card</h1>
 
-    <div class="container" id="student-details">
-      <div class="row">
-        <div class="col-md-6">
-          <h4>Student Information</h4>
-          <table class="table table-bordered">
-            <tr>
-              <th>Sl. No.</th>
-              <td><%= student.slNo %></td>
-            </tr>
-            <tr>
-              <th>First Name</th>
-              <td><%= student.firstName %></td>
-            </tr>
-            <tr>
-              <th>Second Name</th>
-              <td><%= student.secondName %></td>
-            </tr>
-            <tr>
-              <th>USN</th>
-              <td><%= student.usn %></td>
-            </tr>
-            <tr>
-              <th>Branch</th>
-              <td><%= student.branch %></td>
-            </tr>
-            <tr>
-              <th>Blood Group</th>
-              <td><%= student.bloodGroup %></td>
-            </tr>
-            <tr>
-              <th>Father's Name</th>
-              <td><%= student.fathersName %></td>
-            </tr>
-            <tr>
-              <th>Residential Address</th>
-              <td><%= student.residentialAddress %></td>
-            </tr>
-            <tr>
-              <th>Phone Number</th>
-              <td><%= student.phoneNumber %></td>
-            </tr>
-          </table>
+      <div class="id-card-container">
+        <!-- Front Side: Name, Department, and Profile Picture -->
+        <div class="id-card" id="front-side">
+          <div class="left">
+            <div class="details">
+              <p style="margin-top: 80px; font-size: 13px; white-space: nowrap">
+                <strong
+                  ><%= student.firstName %> <%= student.secondName %></strong
+                >
+              </p>
+            </div>
+            <img
+              style="margin-top: 93px"
+              src="https://via.placeholder.com/80"
+              alt="Profile Picture"
+            />
+            <p
+              style="
+                color: white;
+                padding-top: 10px;
+                padding-left: 50px;
+                white-space: nowrap;
+              "
+            >
+              <strong>Student -<%= student.branch %></strong>
+            </p>
+          </div>
         </div>
-        <!-- QR Code Section -->
-        <div class="col-md-6">
-          <h4>QR Code</h4>
-          <!-- This is where the QR code will be displayed -->
-          <canvas id="canvas"></canvas>
+
+        <!-- Back Side: Address, Roll No, Blood Group, QR Code -->
+        <div class="id-card" id="back-side">
+          <div class="">
+            <p
+              style="
+                color: white;
+                padding-left: 110px;
+                font-size: 14px;
+                padding-top: 2px;
+                font-weight: 600;
+              "
+            >
+              <%= student.bloodGroup %>ve
+            </p>
+            <div style="max-width: 300px; word-wrap: break-word; font-size: 15px;">
+              <p style="white-space: normal; margin: 0">
+                D/o <%= student.fathersName %>
+              </p>
+              <p
+                style="
+                  word-wrap: break-word;
+                  overflow-wrap: break-word;
+                  font-size: 13px;
+                  padding-left: 50px;
+                "
+              >
+                <%= student.residentialAddress %>
+              </p>
+              <p style="white-space: nowrap; margin: 0; font-size: 13px; margin-top: 32px;">
+                <%= student.phoneNumber %>
+              </p>
+            </div>
+            <div class="right" style="padding-left: 115px; margin: 0;">
+              <div class="qr-code">
+                <canvas id="canvas"></canvas>
+              </div>
+            </div>
+            <p style="padding-left: 100px; font-size: 12px"><%= student.usn %></p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Button to Download PDF -->
-    <div class="text-center mt-4">
-      <button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button>
+      <!-- Button to Download PDF -->
+      <button class="btn btn-primary mt-4" onclick="downloadPDF()">
+        Download PDF
+      </button>
     </div>
 
     <script>
@@ -85,7 +158,7 @@
         if (str) {
           return str.replace(/[\0\x08\x09\x1a\n\r\x0b\x0c]/g, ""); // Remove control characters
         }
-        return '';
+        return "";
       }
 
       // Prepare the student data as a sanitized string for the QR code
@@ -120,7 +193,10 @@
       // Generate the QR code inside the canvas element
       QRCode.toCanvas(
         document.getElementById("canvas"),
-        studentDataJSON, // JSON string (directly use the JSON string)
+        studentDataJSON,
+        {
+          width: 70, // Set the size of the QR code here (in pixels)
+        },
         function (error) {
           if (error) {
             console.error("QR code generation error:", error);
@@ -130,22 +206,40 @@
         }
       );
 
-      // Function to download the student details as a PDF
+      // Function to download the ID card as a PDF with background images
       function downloadPDF() {
         const { jsPDF } = window.jspdf;
-        const studentDetailsElement = document.getElementById("student-details");
-        const qrCodeElement = document.getElementById("canvas");
+        const pdf = new jsPDF({
+          unit: "pt", // Set unit to points
+          format: [161.3, 252.5], // Set PDF dimensions based on actual size in points
+        });
 
-        html2canvas(studentDetailsElement).then((canvas) => {
+        // Front Page: Add background image
+        const frontImageUrl =
+          "https://res.cloudinary.com/vanshstorage/image/upload/v1733251106/front_qu88ri.jpg"; // Front background image URL
+        pdf.addImage(frontImageUrl, "JPEG", 0, 0, 161.3, 252.5); // Add the front page background image
+
+        // Capture front page content
+        const frontSide = document.getElementById("front-side");
+        html2canvas(frontSide, { scale: 4, useCORS: true }).then((canvas) => {
           const imgData = canvas.toDataURL("image/png");
-          const pdf = new jsPDF();
+          pdf.addImage(imgData, "PNG", 0, 0, 161.3, 252.5); // Add the front page content
+          pdf.addPage(); // Create a new page for the back side
 
-          // Add student details to the PDF
-          pdf.text("Student Details", 10, 10);
-          pdf.addImage(imgData, "PNG", 10, 20, 180, 100);
+          // Back Page: Add background image
+          const backImageUrl =
+            "https://res.cloudinary.com/vanshstorage/image/upload/v1733251106/back_gid61r.jpg"; // Back background image URL
+          pdf.addImage(backImageUrl, "JPEG", 0, 0, 161.3, 252.5); // Add the back page background image
 
-          // Download the PDF
-          pdf.save("student-details.pdf");
+          // Capture back page content
+          const backSide = document.getElementById("back-side");
+          html2canvas(backSide, { scale: 4, useCORS: true }).then((canvas) => {
+            const imgDataBack = canvas.toDataURL("image/png");
+            pdf.addImage(imgDataBack, "PNG", 0, 0, 161.3, 252.5); // Add the back page content
+
+            // Save the generated PDF
+            pdf.save("student-id-card.pdf");
+          });
         });
       }
     </script>

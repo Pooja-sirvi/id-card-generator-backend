@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const connectDB = require("./config/config");
 const uploadRoutes = require("./routes/uploadRoutes");
@@ -6,7 +7,6 @@ const dropDbRoutes = require("./routes/dropDbRoutes");
 const deleteRoutes = require("./routes/deleteEachRoutes");
 const searchRoutes = require("./routes/searchRoutes");
 const eachRecord = require("./routes/eachRecordRoutes");
-
 const app = express();
 
 // Connect to MongoDB
@@ -29,4 +29,4 @@ app.get("/", (req, res) => {
 });
 
 // Serve the app
-app.listen(3000, () => console.log("Server running on port 3000"));
+app.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
